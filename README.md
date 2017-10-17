@@ -4,4 +4,4 @@ A tool to convert KITTI object detection dataset to tfrecord for use with TF obj
 
 # plot_velodyne.py
 
-Plot velodyne points on image of select camera of KITTI raw data. As of now this requires a slight modification to pykitti (see plot_velodyne.py for details).
+Plot velodyne points on image of select camera of KITTI raw data. 

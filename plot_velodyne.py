@@ -1,17 +1,13 @@
 """
     Plot velodyne points on image of select camera
-
-    !CAUTION: requires adding 
-        data['Tr_velo_to_cam'] = T_cam0unrect_velo
-    in line 142 in raw.py of pykitti (v0.2.2)
     
     this is implemented borrowing from the matlab devkit provided
     for KITTI
 """
 
-import pykitti # pip install pykitti
+import pykitti # pip install pykitti (v0.2.3)
 import numpy as np
-import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt # (v2.0.2)
 from os.path import expanduser
 
 __author__ = "Moritz Kampelmuehler"
@@ -34,7 +30,7 @@ width = cam_img.shape[1]
 
 # calculate transformation matrix for velodyne to camera
 R_cam_to_rect = data.calib.R_rect_00
-Tr_velo_to_cam = data.calib.Tr_velo_to_cam
+Tr_velo_to_cam = data.calib.T_cam0_velo_unrect
 P_velo_to_img = P_rect[camera].dot(R_cam_to_rect.dot(Tr_velo_to_cam))
 
 # load velodyne points
@@ -71,6 +67,7 @@ plt.xlim(0, width)
 plt.ylim(0, height)
 plt.gca().invert_yaxis()
 ind = np.indices(out_quantized.shape)
+#~ print(ind[0].flatten().shape)
 plt.scatter(ind[0], ind[1], c=out_quantized[ind[0],ind[1],:],
             marker='o', s=70, alpha=0.3, cmap='plasma') # adjust params as needed
 plt.show()
