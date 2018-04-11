@@ -68,7 +68,6 @@ plt.xlim(0, width)
 plt.ylim(0, height)
 plt.gca().invert_yaxis()
 ind = np.indices(out_quantized.shape)
-print(ind[0].shape)
 plt.scatter(ind[0], ind[1], c=out_quantized[ind[0],ind[1],:].reshape(ind[0].shape),
             marker='o', s=5, alpha=0.7, cmap='plasma') # adjust params as needed
 plt.show()
