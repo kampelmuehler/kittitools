@@ -5,9 +5,9 @@
     for KITTI
 """
 
-import pykitti # pip install pykitti (v0.2.3)
+import pykitti # pip install pykitti (v0.3.0)
 import numpy as np
-import matplotlib.pyplot as plt # (v2.0.2)
+import matplotlib.pyplot as plt 
 from os.path import expanduser
 
 __author__ = "Moritz Kampelmuehler"
@@ -20,13 +20,13 @@ frame = 176
 camera = 2 # must be in range(4)
 
 # load raw data
-data = pykitti.raw(basedir, date, drive, frames=[frame], fileformat='jpg')
+data = pykitti.raw(basedir, date, drive, frames=[frame], imtype='jpg')
 camera_imgs = {0:data.cam0, 1:data.cam1, 2:data.cam2, 3:data.cam3}
 P_rect = {0:data.calib.P_rect_00, 1:data.calib.P_rect_10, 2:data.calib.P_rect_20, 3:data.calib.P_rect_30}
 
 cam_img = next(camera_imgs[camera])
-height = cam_img.shape[0]
-width = cam_img.shape[1]
+height = cam_img.height
+width = cam_img.width
 
 # calculate transformation matrix for velodyne to camera
 R_cam_to_rect = data.calib.R_rect_00
@@ -60,14 +60,15 @@ out_quantized = np.empty((width, height, 1))
 out_quantized.fill(np.nan) # set nan where no data is available
 for i in range(p_out.shape[0]):
     out_quantized[p_out[i,0].astype(int),p_out[i,1].astype(int)] = p_out[i,2]
+print(p_out[np.argmax(p_out[:,2])])
 
 # plot whole quantized grid over image
-plt.imshow(cam_img)
+plt.imshow(np.array(cam_img.getdata()).reshape(height, width, 3))
 plt.xlim(0, width)
 plt.ylim(0, height)
 plt.gca().invert_yaxis()
 ind = np.indices(out_quantized.shape)
-#~ print(ind[0].flatten().shape)
-plt.scatter(ind[0], ind[1], c=out_quantized[ind[0],ind[1],:],
-            marker='o', s=70, alpha=0.3, cmap='plasma') # adjust params as needed
+print(ind[0].shape)
+plt.scatter(ind[0], ind[1], c=out_quantized[ind[0],ind[1],:].reshape(ind[0].shape),
+            marker='o', s=5, alpha=0.7, cmap='plasma') # adjust params as needed
 plt.show()
