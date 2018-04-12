@@ -66,8 +66,14 @@ print(p_out[np.argmax(p_out[:,2])])
 plt.imshow(np.array(cam_img.getdata()).reshape(height, width, 3))
 plt.xlim(0, width)
 plt.ylim(0, height)
+plt.xlabel('x')
+plt.ylabel('y')
 plt.gca().invert_yaxis()
 ind = np.indices(out_quantized.shape)
 plt.scatter(ind[0], ind[1], c=out_quantized[ind[0],ind[1],:].reshape(ind[0].shape),
-            marker='o', s=5, alpha=0.7, cmap='plasma') # adjust params as needed
+            marker='o', s=20, alpha=0.7, cmap='plasma') # adjust params as needed
+print('{} points plotted'.format(
+          np.count_nonzero(
+          ~np.isnan(
+          out_quantized[ind[0],ind[1],:]))))
 plt.show()
